@@ -38,6 +38,14 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          {{- if .Values.connectionString }}
+          env:
+            - name: DB_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.connectionString.name }}
+                  key: {{ .Values.connectionString.key }}
+          {{- end }}
           envFrom:
           {{- if .Values.existingConfigMap }}
             - configMapRef:

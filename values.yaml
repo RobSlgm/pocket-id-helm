@@ -32,6 +32,10 @@ existingConfigMap: ""
 # -- Name of an existing secret containing any environment variables
 existingSecret: ""
 
+connectionString: {}
+  # name: pocketid-cluster-app
+  # key: fqdn-uri
+
 # -- This is for the secretes for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
 
