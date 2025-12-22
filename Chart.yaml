@@ -5,7 +5,8 @@ home: https://github.com/matslarson/pocket-id-helm
 icon: https://github.com/user-attachments/assets/4ceb2708-9f29-4694-b797-be833efce17d
 type: application
 sources:
+  - https://github.com/RobSlgm/pocket-id-helm
   - https://github.com/pocket-id/pocket-id
   - https://github.com/matslarson/pocket-id-helm
-appVersion: "v1.15.0"
-version: "v1.15.0"
+appVersion: "v1.16.0"
+version: "v1.16.0"
