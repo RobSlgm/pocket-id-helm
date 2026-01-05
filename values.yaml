@@ -145,7 +145,7 @@ livenessProbe:
     path: /health
     port: http
 readinessProbe:
-  initialDelaySeconds: 60
+  initialDelaySeconds: 15
   httpGet:
     # -- Healthcheck endpoint
     path: /health
