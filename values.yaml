@@ -13,13 +13,11 @@ image:
 
 # -- Pocket-id configuration variables
 # For more information see: https://pocket-id.org/docs/configuration/environment-variables
-config:
-  {}
+config: {}
   # appUrl: ""
   # trustProxy: ""
   # maxmindLicenseKey: ""
   # puid: ""
-  # dbProvider: ""
   # dbConnectionString: ""
   # uploadPath: ""
   # geoliteDbPath: ""
@@ -30,10 +28,16 @@ config:
 existingConfigMap: ""
 
 # -- Name of an existing secret containing any environment variables
+# Add secret containing **ENCRYPTION_KEY** and if applicable SMTP_USER, SMTP_PASSWORD, ...
 existingSecret: ""
 
+# -- Secret for a database connection string 
+# Supply name of secret and key containing a fully qualified uri for the database connection.
+# *Using config to supply the database connection string is not recommended*
 connectionString: {}
+  # -- Name of secret
   # name: pocketid-cluster-app
+  # -- Key containing a fully qualified uri for the database connection
   # key: fqdn-uri
 
 # -- This is for the secretes for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
@@ -53,12 +57,10 @@ serviceAccount:
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext:
-  {}
+podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext:
-  {}
+securityContext: {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -66,17 +68,17 @@ securityContext:
   # runAsNonRoot: true
   # runAsUser: 1000
 
+# @ignored
 service:
   type: ClusterIP
   port: 1411
 
 ingress:
-  # -- Enables an ingress for the application
+  # -- Enables an ingress for the application  (use either ingress or httpRoute)
   enabled: false
   className: ""
   # -- Annotations for the ingress
-  annotations:
-    {}
+  annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
@@ -94,19 +96,19 @@ ingress:
 # Requires Gateway API resources and suitable controller installed within the cluster
 # (see: https://gateway-api.sigs.k8s.io/guides/)
 httpRoute:
-  # HTTPRoute enabled.
+  # -- Enables a Gateway API HTTPRoute (use either ingress or httpRoute)
   enabled: false
-  # HTTPRoute annotations.
+  # -- HTTPRoute annotations.
   annotations: {}
-  # Which Gateways this Route is attached to.
+  # -- Which Gateways this Route is attached to.
   parentRefs:
   - name: gateway
     sectionName: http
     # namespace: default
-  # Hostnames matching HTTP header.
+  # -- Hostnames matching HTTP header.
   hostnames:
   - chart-example.local
-  # List of rules and filters applied.
+  # -- List of rules and filters applied.
   rules:
   - matches:
     - path:
@@ -129,8 +131,7 @@ httpRoute:
   #       value: v2
 
 # -- Specifiy resources for the pod
-resources:
-  {}
+resources: {}
   # limits:
   #   cpu: 100m
   #   memory: 128Mi

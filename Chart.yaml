@@ -1,13 +1,11 @@
 apiVersion: v2
 name: pocket-id
-description: Pocket-id Helm chart for Kubernetes
+description: Pocket ID Helm chart for Kubernetes
 home: https://github.com/RobSlgm/pocket-id-helm
 icon: https://github.com/pocket-id/pocket-id/blob/main/frontend/static/img/static-logo.svg
 type: application
 sources:
   - https://github.com/RobSlgm/pocket-id-helm
   - https://github.com/pocket-id/pocket-id
-  - https://github.com/matslarson/pocket-id-helm
-  - https://github.com/hobbit44/pocket-id-helm/commits/main/
 appVersion: "v2.1.0"
 version: "v2.1.0"

@@ -16,6 +16,10 @@
 
 {{ template "chart.description" . }}
 
+### Requirements
+
+A postgresql database is required but **not** installed by this helm chart. Install and configure with your prefered toolset (e.g. CloudnativePg)
+Storage is required for some artifacts (users profile picture, OIDC client logo).
 
 ### Installing the Chart
 To install the chart with the release name my-release:
@@ -32,15 +36,49 @@ helm delete my-release
 ```
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
+## Advanced configuration
+
+Use the config section of your `values.yaml` to setup Pocket ID. The full configuration can be supplied (which disables the config UI).
+
+Example:
+~~~yaml
+config:
+  appUrl: "https://auth.example.com"
+  # maxmindLicenseKey: (see secret)
+  puid: "1000"
+  guid: "1000"
+  # encryptionKey: (see secret)
+  # geoliteDbPath: ""
+  uiConfigDisabled: true
+  appName: My Pocket ID instance
+  emailsVerified: true
+  smtpHost: mail.example.com
+  smtpPort: "465"
+  smtpFrom: auth@example.com
+  # smtpUser:  (see secret)
+  # smtpPassword:  (see secret)
+  # smtpPasswordFile: (not used)
+  smtpTls: tls
+  # smtpSkpCertVerify:
+  allowUserSignups: withToken
+  emailLoginNotificationEnabled: "true"
+  emailOneTimeAccessAsAdminEnabled: "true"
+  emailApiKeyExpirationEnabled: "true"
+  emailOneTimeAccessAsUnauthenticatedEnabled: "false"
+  accentColor: "oklch(0.25 0.18 80)"
+  # see comment
+  # signupDefaultUserGroupIds: '["83473555-2343-42bb-b4ba-879a8a7a29ab"]'
+  logJson: "true"
+~~~
+
+[Official documentation](https://pocket-id.org/docs/configuration/environment-variables) of the configuration variables. Change i.e. LDAP_BIND_PASSWORD to ldapBindPassword for use in the config section.
+
 {{ template "chart.sourcesSection" . }}
+
+Originally based on https://github.com/hobbit44/pocket-id-helm/commits/main/ with several fixes from https://github.com/matslarson/pocket-id-helm
 
 {{ template "chart.requirementsSection" . }}
 
 {{ template "chart.valuesSection" . }}
-
-### Todo
-
-- [ ] Add database provider charts as dependencies
-- [ ] Seperate front and backend to seperate deployments
 
 {{ template "helm-docs.versionFooter" . }}
