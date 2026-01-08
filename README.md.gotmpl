@@ -38,7 +38,12 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Advanced configuration
 
-Use the config section of your `values.yaml` to setup Pocket ID. The full configuration can be supplied (which disables the config UI).
+Use the config section of your `values.yaml` to setup Pocket ID. The full configuration can be supplied. Disable the config UI with the `uiConfigDisabled` setting.
+
+[Official documentation](https://pocket-id.org/docs/configuration/environment-variables) of the configuration variables. 
+
+Change environment variables (e.g., **LDAP_BIND_PASSWORD**) to **lower camel case** (e.g., **ldapBindPassword**) for use in the config section.
+
 
 Example:
 ~~~yaml
@@ -71,7 +76,6 @@ config:
   logJson: "true"
 ~~~
 
-[Official documentation](https://pocket-id.org/docs/configuration/environment-variables) of the configuration variables. Change i.e. LDAP_BIND_PASSWORD to ldapBindPassword for use in the config section.
 
 {{ template "chart.sourcesSection" . }}
 
