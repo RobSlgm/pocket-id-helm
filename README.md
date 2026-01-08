@@ -33,7 +33,12 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Advanced configuration
 
-Use the config section of your `values.yaml` to setup Pocket ID. The full configuration can be supplied (which disables the config UI).
+Use the config section of your `values.yaml` to setup Pocket ID. The full configuration can be supplied. Disable the config UI with the `uiConfigDisabled` setting.
+
+[Official documentation](https://pocket-id.org/docs/configuration/environment-variables) of the configuration variables. 
+
+Change environment variables (e.g., **LDAP_BIND_PASSWORD**) to **lower camel case** (e.g., **ldapBindPassword**) for use in the config section.
+
 
 Example:
 ~~~yaml
@@ -66,7 +71,6 @@ config:
   logJson: "true"
 ~~~
 
-[Official documentation](https://pocket-id.org/docs/configuration/environment-variables) of the configuration variables. Change i.e. LDAP_BIND_PASSWORD to ldapBindPassword for use in the config section.
 
 ## Source Code
 
@@ -87,12 +91,12 @@ Originally based on https://github.com/hobbit44/pocket-id-helm/commits/main/ wit
 | existingConfigMap | string | `""` | Name of an existing config map containing any environment variables |
 | existingSecret | string | `""` | Name of an existing secret containing any environment variables Add secret containing **ENCRYPTION_KEY** and if applicable SMTP_USER, SMTP_PASSWORD, ... |
 | fullnameOverride | string | `""` | The full resource name override |
-| httpRoute | object | `{"annotations":{},"enabled":false,"hostnames":["chart-example.local"],"parentRefs":[{"name":"gateway","sectionName":"http"}],"rules":[{"matches":[{"path":{"type":"PathPrefix","value":"/"}}]}]}` | Expose the service via gateway-api HTTPRoute Requires Gateway API resources and suitable controller installed within the cluster (see: https://gateway-api.sigs.k8s.io/guides/) |
+| httpRoute | object | {} | Expose the service via gateway-api HTTPRoute Requires Gateway API resources and suitable controller installed within the cluster (see: https://gateway-api.sigs.k8s.io/guides/) |
 | httpRoute.annotations | object | `{}` | HTTPRoute annotations. |
 | httpRoute.enabled | bool | `false` | Enables a Gateway API HTTPRoute (use either ingress or httpRoute) |
 | httpRoute.hostnames | list | `["chart-example.local"]` | Hostnames matching HTTP header. |
-| httpRoute.parentRefs | list | `[{"name":"gateway","sectionName":"http"}]` | Which Gateways this Route is attached to. |
-| httpRoute.rules | list | `[{"matches":[{"path":{"type":"PathPrefix","value":"/"}}]}]` | List of rules and filters applied. |
+| httpRoute.parentRefs | list | {}   | Which Gateways this Route is attached to. |
+| httpRoute.rules | list | {}   | List of rules and filters applied. |
 | image.pullPolicy | string | `"IfNotPresent"` | The pull policy for images |
 | image.repository | string | `"ghcr.io/pocket-id/pocket-id"` | The container image to run |
 | image.tag | string | `""` | Overrides the image tag whose default is the chart version. |
