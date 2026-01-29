@@ -12,20 +12,28 @@ image:
   distroless: false
   tag: ""
 
+# -- Choose backend for large binary objects (e.g. logo, background images, ...)
+# Valid values are: "filesystem", "database" or "s3".
+# Set's Pocket ID `FILE_BACKEND` property
+blobBackend: "database"
+
+# -- Set Url for Pocket ID instance
+# Set's Pocket ID `APP_URL` property with prepended https:// and adds hostname to HttpRoute
+appUrl: "auth.example.com"
+
 # -- Pocket-id configuration variables
 # For more information see: https://pocket-id.org/docs/configuration/environment-variables
 config: {}
-  # appUrl: ""
   # trustProxy: ""
   # maxmindLicenseKey: ""
-  # puid: ""
   # dbConnectionString: ""
   # uploadPath: ""
   # geoliteDbPath: ""
-  # port: ""
-  # host: ""
+  # logLevel: info  
 
-# -- Name of an existing config map containing any environment variables
+# Name of an existing config map containing any environment variables. 
+# All automatically added settings need to be added.
+# @ignored
 existingConfigMap: ""
 
 # -- Name of an existing secret containing any environment variables
@@ -61,6 +69,9 @@ podLabels: {}
 podSecurityContext: {}
   # fsGroup: 2000
 
+# -- Security context. 
+# If supplied runAsUser is used for Pocket ID `PUID`.
+# If supplied runAsGroup is used for Pocket ID `PGID`
 securityContext: {}
   # capabilities:
   #   drop:
@@ -68,6 +79,7 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
+  # runAsGroup: 1000  
 
 # @ignored
 service:

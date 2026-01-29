@@ -16,10 +16,8 @@ spec:
     {{- with .Values.httpRoute.parentRefs }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.httpRoute.hostnames }}
   hostnames:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    - {{ .Values.appUrl }}
   rules:
     {{- range .Values.httpRoute.rules }}
     {{- with .matches }}

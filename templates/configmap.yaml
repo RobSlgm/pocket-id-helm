@@ -4,15 +4,24 @@ kind: ConfigMap
 metadata:
   name: {{ include "pocket-id.fullname" . }}-config
 data:
-  {{- if .Values.ingress.enabled -}}
-  {{- if not .Values.config.appUrl  }}
-  {{- required "appUrl needs to be set if using an ingress" .Values.config.appUrl }}
-  {{- else if and .Values.ingress.tls (not (hasPrefix "https" .Values.config.appUrl)) }}
-  {{- fail "value for .Values.config.appUrl needs to start with 'https://' when using tls" }}
+  {{- if or .Values.ingress.enabled .Values.httpRoute.enabled -}}
+  {{- if not .Values.appUrl  }}
+  {{- required "appUrl needs to be set if using an ingress or httproute" .Values.config.appUrl }}
   {{- end }}
-  TRUST_PROXY: "true"
-  {{- end }}
-  {{- range $key := keys .Values.config }}
-  {{ $key | snakecase | upper }}: {{ get $.Values.config $key | quote }}
+  {{- end }}    
+  {{- $minimal := dict 
+          "appUrl" (printf "https://%s" .Values.appUrl) 
+          "fileBackend" ( .Values.blobBackend )
+          "trustProxy" "true" 
+  -}}
+  {{- if .Values.securityContext.runAsUser -}}
+  {{- $_ := set $minimal "puid" .Values.securityContext.runAsUser -}}
+  {{- end -}}
+  {{- if .Values.securityContext.runAsGroup -}}
+  {{- $_ := set $minimal "pgid" .Values.securityContext.runAsGroup -}}
+  {{- end -}}
+  {{- $combined := merge $minimal .Values.config -}}
+  {{- range $key := keys $combined | sortAlpha }}
+  {{ $key | snakecase | upper }}: {{ get $combined $key | quote }}
   {{- end }}
 {{- end }}

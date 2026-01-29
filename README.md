@@ -14,7 +14,13 @@ Pocket ID Helm chart for Kubernetes
 ### Requirements
 
 A postgresql database is required but **not** installed by this helm chart. Install and configure with your prefered toolset (e.g. CloudnativePg)
-Storage is required for some artifacts (users profile picture, OIDC client logo).
+
+Certain artifacts, such as user profile pictures and OIDC client logos, require blob storage. If you choose filesystem storage (as opposed to database or S3), persistent disk storage must be provisioned. If you opt for S3 storage, the relevant environment variables (e.g., S3_* settings) must be configured.
+
+> [!WARNING]
+> Changes to the `blobBackend` (`FILE_BACKEND` environment setting) require a data migration.
+
+If you enable the **GeoLite2 Database**, filesystem storage is mandatory, regardless of the blob storage backend you have selected for other assets.
 
 ### Installing the Chart
 To install the chart with the release name my-release:
@@ -41,16 +47,14 @@ Change environment variables (e.g., **LDAP_BIND_PASSWORD**) to **lower camel cas
 
 
 Example:
+
 ~~~yaml
 config:
-  appUrl: "https://auth.example.com"
-  # maxmindLicenseKey: (see secret)
-  puid: "1000"
-  guid: "1000"
+  appName: My Pocket ID instance
   # encryptionKey: (see secret)
+  # maxmindLicenseKey: (see secret)
   # geoliteDbPath: ""
   uiConfigDisabled: true
-  appName: My Pocket ID instance
   emailsVerified: true
   smtpHost: mail.example.com
   smtpPort: "465"
@@ -69,8 +73,31 @@ config:
   # see comment
   # signupDefaultUserGroupIds: '["83473555-2343-42bb-b4ba-879a8a7a29ab"]'
   logJson: "true"
+  # logLevel: info
 ~~~
 
+### Networking & IP Handling 
+
+When using GeoLite2 and/or the feature to send an email to the user when they log in from a new device, ensure your infrastructure (Load Balancers, Firewalls, etc.) is configured to pass the real client IP to Pocket ID. 
+
+While Pocket ID provides built-in rate limiting and Geo-lookup, you may also consider offloading these tasks to an infrastructure-level WAF. Handling these at the edge can be beneficial for your broader environment, as it secures the entire network path before traffic even reaches your individual applications.
+
+### Backup
+While a backup solution is not natively bundled with this Helm chart, we strongly recommend implementing a strategy that covers the following areas:
+
+- Ensure you have a scheduled backup process for your PostgreSQL instance, as it contains the core application state and user data.
+- If you have configured Pocket ID to use the filesystem for blob storage, these directories must be backed up separately from the database to avoid data loss of user assets.
+- If you choose to use Filesystem or S3 storage, be mindful of recovery consistency. Because the database contains references to the files in your blob storage, these two components are strictly linked. To minimize data mismatches during a restore, you should optimally plan to trigger your database and filesystem/S3 backups at the same time.
+
+> [!NOTE]
+> Opting to store blobs directly within the database simplifies your backup routine, as a single database dump will include both your application data and your stored artifacts.
+
+Pocket ID 2.2 has an **experimental** import and export function (works also with distroless).
+Example to store the export on your local machine:
+
+~~~shell
+kubectl exec -i -n pocket-id pocket-id-0  --  /app/pocket-id export --path - >C:\temp\pocket-id.zip
+~~~
 
 ## Source Code
 
@@ -86,9 +113,10 @@ Originally based on https://github.com/hobbit44/pocket-id-helm/commits/main/ wit
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
+| appUrl | string | `"auth.example.com"` | Set Url for Pocket ID instance Set's Pocket ID `APP_URL` property with prepended https:// and adds hostname to HttpRoute |
+| blobBackend | string | `"database"` | Choose backend for large binary objects (e.g. logo, background images, ...) Valid values are: "filesystem", "database" or "s3". Set's Pocket ID `FILE_BACKEND` property |
 | config | object | `{}` | Pocket-id configuration variables For more information see: https://pocket-id.org/docs/configuration/environment-variables |
 | connectionString | object | `{}` | Secret for a database connection string  Supply name of secret and key containing a fully qualified uri for the database connection. *Using config to supply the database connection string is not recommended* |
-| existingConfigMap | string | `""` | Name of an existing config map containing any environment variables |
 | existingSecret | string | `""` | Name of an existing secret containing any environment variables Add secret containing **ENCRYPTION_KEY** and if applicable SMTP_USER, SMTP_PASSWORD, ... |
 | fullnameOverride | string | `""` | The full resource name override |
 | httpRoute | object | {} | Expose the service via gateway-api HTTPRoute Requires Gateway API resources and suitable controller installed within the cluster (see: https://gateway-api.sigs.k8s.io/guides/) |
@@ -97,9 +125,10 @@ Originally based on https://github.com/hobbit44/pocket-id-helm/commits/main/ wit
 | httpRoute.hostnames | list | `["chart-example.local"]` | Hostnames matching HTTP header. |
 | httpRoute.parentRefs | list | {}   | Which Gateways this Route is attached to. |
 | httpRoute.rules | list | {}   | List of rules and filters applied. |
+| image.distroless | bool | `false` | Overrides the image tag whose default is the chart version. |
 | image.pullPolicy | string | `"IfNotPresent"` | The pull policy for images |
 | image.repository | string | `"ghcr.io/pocket-id/pocket-id"` | The container image to run |
-| image.tag | string | `""` | Overrides the image tag whose default is the chart version. |
+| image.tag | string | `""` |  |
 | imagePullSecrets | list | `[]` | This is for the secretes for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/ |
 | ingress.annotations | object | `{}` | Annotations for the ingress |
 | ingress.className | string | `""` |  |
@@ -126,7 +155,7 @@ Originally based on https://github.com/hobbit44/pocket-id-helm/commits/main/ wit
 | readinessProbe.httpGet.port | string | `"http"` |  |
 | readinessProbe.initialDelaySeconds | int | `15` |  |
 | resources | object | `{}` | Specifiy resources for the pod |
-| securityContext | object | `{}` |  |
+| securityContext | object | `{}` | Security context.  If supplied runAsUser is used for Pocket ID `PUID`. If supplied runAsGroup is used for Pocket ID `PGID` |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.automount | bool | `true` | Automatically mount a ServiceAccount's API credentials? |
 | serviceAccount.create | bool | `true` | Specifies whether a service account should be created |

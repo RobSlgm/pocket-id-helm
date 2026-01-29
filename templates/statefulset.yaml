@@ -1,3 +1,9 @@
+{{- $hasPersistence := and .Values.persistence.enabled .Values.persistence.existingClaim -}}
+{{- if eq .Values.blobBackend "filesystem" -}}
+  {{- if not $hasPersistence -}}
+      {{- fail "blobBackend: 'filesystem' requires enabled persistence" -}}
+  {{- end -}}
+{{- end -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -65,12 +71,17 @@ spec:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- if or $hasPersistence .Values.volumeMounts }}            
           volumeMounts:
+            {{- if $hasPersistence }}
             - name: {{ include "pocket-id.fullname" . }}-data
               mountPath: /app/data
+            {{- end}}
             {{- with .Values.volumeMounts }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
+          {{- end }}
+      {{- if or $hasPersistence .Values.volumes }}
       volumes:
         {{- if and .Values.persistence.enabled .Values.persistence.existingClaim }}
         - name: {{ include "pocket-id.fullname" . }}-data
@@ -80,6 +91,7 @@ spec:
         {{- with .Values.volumes }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
