@@ -7,5 +7,5 @@ type: application
 sources:
   - https://github.com/RobSlgm/pocket-id-helm
   - https://github.com/pocket-id/pocket-id
-appVersion: "v2.1.0"
-version: "2.1.1"
+appVersion: "v2.2.0"
+version: "2.2.1"
