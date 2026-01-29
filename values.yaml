@@ -9,6 +9,7 @@ image:
   # -- The pull policy for images
   pullPolicy: IfNotPresent
   # -- Overrides the image tag whose default is the chart version.
+  distroless: false
   tag: ""
 
 # -- Pocket-id configuration variables
