@@ -6,7 +6,7 @@
 {{ define "chart.appVersionBadge" -}}
 {{- $releaseEndpoint := urlquery "https://api.github.com/repos/pocket-id/pocket-id/releases/latest" }}
 {{- $releaseNameQuery := urlquery "$.name" }}
-![AppVersion](https://img.shields.io/badge/dynamic/json?url={{ $releaseEndpoint }}&query={{ $releaseNameQuery }}&label=Version) 
+![AppVersion](https://img.shields.io/badge/dynamic/json?url={{ $releaseEndpoint }}&query={{ $releaseNameQuery }}&label=AppVersion) 
 {{- end }}
 
 {{ template "chart.header" . }}
