@@ -31,7 +31,7 @@ If you enable the **GeoLite2 Database**, filesystem storage is mandatory, regard
 To install the chart with the release name my-release:
 
 ```
-helm install my-release oci://ghcr.io/robslgm/pocket-id-helm/pocket-id
+helm install my-release oci://ghcr.io/robslgm/charts/pocket-id
 ```
 
 ### Uninstalling the Chart
@@ -86,6 +86,18 @@ config:
 When using GeoLite2 and/or the feature to send an email to the user when they log in from a new device, ensure your infrastructure (Load Balancers, Firewalls, etc.) is configured to pass the real client IP to Pocket ID. 
 
 While Pocket ID provides built-in rate limiting and Geo-lookup, you may also consider offloading these tasks to an infrastructure-level WAF. Handling these at the edge can be beneficial for your broader environment, as it secures the entire network path before traffic even reaches your individual applications.
+
+### Distroless
+
+Enable Distroless images by setting `image.distroless=true`. When enabled, ensure you configure the appropriate permissions within the `securityContext`, as these images do not run as root by default.
+
+If you are using as `blobBackend` the filesystem, start first without distroless to allow proper creation of the filesystem and enable in a second step distroless.
+
+> [!NOTE] Filesystem Backends:
+> If you are using the **filesystem** as your `blobBackend`, please perform the initial deployment with Distroless disabled (the default). Once the necessary storage directories are initialized, you can enable Distroless in a subsequent update.
+
+> [!HINT] Database or S3 backends:
+> Consider setting `readOnlyRootFilesystem` to `true` in your security context and to drop all capabilities.
 
 ### Backup
 While a backup solution is not natively bundled with this Helm chart, we strongly recommend implementing a strategy that covers the following areas:

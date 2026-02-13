@@ -26,7 +26,7 @@ If you enable the **GeoLite2 Database**, filesystem storage is mandatory, regard
 To install the chart with the release name my-release:
 
 ```
-helm install my-release oci://ghcr.io/robslgm/pocket-id-helm/pocket-id
+helm install my-release oci://ghcr.io/robslgm/charts/pocket-id
 ```
 
 ### Uninstalling the Chart
@@ -82,6 +82,18 @@ When using GeoLite2 and/or the feature to send an email to the user when they lo
 
 While Pocket ID provides built-in rate limiting and Geo-lookup, you may also consider offloading these tasks to an infrastructure-level WAF. Handling these at the edge can be beneficial for your broader environment, as it secures the entire network path before traffic even reaches your individual applications.
 
+### Distroless
+
+Enable Distroless images by setting `image.distroless=true`. When enabled, ensure you configure the appropriate permissions within the `securityContext`, as these images do not run as root by default.
+
+If you are using as `blobBackend` the filesystem, start first without distroless to allow proper creation of the filesystem and enable in a second step distroless.
+
+> [!WARNING] Filesystem Backends:
+> If you are using the **filesystem** as your `blobBackend`, please perform the initial deployment with Distroless disabled (the default). Once the necessary storage directories are initialized, you can enable Distroless in a subsequent update.
+
+> [!TIP] Database or S3 backends:
+> Consider additionally setting `readOnlyRootFilesystem` to `true` in your security context and to drop all capabilities.
+
 ### Backup
 While a backup solution is not natively bundled with this Helm chart, we strongly recommend implementing a strategy that covers the following areas:
 
@@ -115,7 +127,7 @@ Originally based on https://github.com/hobbit44/pocket-id-helm/commits/main/ wit
 | affinity | object | `{}` |  |
 | appUrl | string | `"auth.example.com"` | Set Url for Pocket ID instance Set's Pocket ID `APP_URL` property with prepended https:// and adds hostname to HttpRoute |
 | blobBackend | string | `"database"` | Choose backend for large binary objects (e.g. logo, background images, ...) Valid values are: "filesystem", "database" or "s3". Set's Pocket ID `FILE_BACKEND` property |
-| config | object | `{}` | Pocket-id configuration variables For more information see: https://pocket-id.org/docs/configuration/environment-variables |
+| config | object | `{}` | Pocket-id configuration variables For more information and full list of options see: https://pocket-id.org/docs/configuration/environment-variables |
 | connectionString | object | `{}` | Secret for a database connection string  Supply name of secret and key containing a fully qualified uri for the database connection. *Using config to supply the database connection string is not recommended* |
 | existingSecret | string | `""` | Name of an existing secret containing any environment variables Add secret containing **ENCRYPTION_KEY** and if applicable SMTP_USER, SMTP_PASSWORD, ... |
 | fullnameOverride | string | `""` | The full resource name override |

@@ -11,6 +11,7 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
+  CHART_REPO: charts
 
 jobs:
   build:
@@ -39,6 +40,6 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.result }}
         run: |
-          REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          REPOSITORY_OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           helm package . --version $VERSION --dependency-update
-          helm push pocket-id-${VERSION}.tgz oci://${{ env.REGISTRY }}/$REPO_LOWER
+          helm push pocket-id-${VERSION}.tgz oci://${{ env.REGISTRY }}/${REPOSITORY_OWNER_LC}/${{ env.CHART_REPO }}
