@@ -6,7 +6,7 @@
 
 
 
-![Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fpocket-id%2Fpocket-id%2Freleases%2Flatest&query=%24.name&label=Version)![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) 
+![Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2FRobSlgm%2Fpocket-id-helm%2Freleases%2Flatest&query=%24.name&label=Version)![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) 
 ![AppVersion](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fpocket-id%2Fpocket-id%2Freleases%2Flatest&query=%24.name&label=Version)
 
 Pocket ID Helm chart for Kubernetes
@@ -88,11 +88,13 @@ Enable Distroless images by setting `image.distroless=true`. When enabled, ensur
 
 If you are using as `blobBackend` the filesystem, start first without distroless to allow proper creation of the filesystem and enable in a second step distroless.
 
-> [!WARNING] Filesystem Backends:
+> [!WARNING]
+> **Filesystem Backends**:
 > If you are using the **filesystem** as your `blobBackend`, please perform the initial deployment with Distroless disabled (the default). Once the necessary storage directories are initialized, you can enable Distroless in a subsequent update.
 
-> [!TIP] Database or S3 backends:
-> Consider additionally setting `readOnlyRootFilesystem` to `true` in your security context and to drop all capabilities.
+> [!NOTE] 
+> **Database or S3 backends**:
+> Consider setting `readOnlyRootFilesystem` to `true` in your security context and to drop all capabilities.
 
 ### Backup
 While a backup solution is not natively bundled with this Helm chart, we strongly recommend implementing a strategy that covers the following areas:

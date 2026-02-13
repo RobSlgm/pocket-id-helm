@@ -1,5 +1,5 @@
 {{ define "chart.versionBadge" -}}
-{{- $releaseEndpoint := urlquery "https://api.github.com/repos/pocket-id/pocket-id/releases/latest" }}
+{{- $releaseEndpoint := urlquery "https://api.github.com/repos/RobSlgm/pocket-id-helm/releases/latest" }}
 {{- $releaseNameQuery := urlquery "$.name" }}
 ![Version](https://img.shields.io/badge/dynamic/json?url={{ $releaseEndpoint }}&query={{ $releaseNameQuery }}&label=Version) 
 {{- end }}
@@ -93,10 +93,12 @@ Enable Distroless images by setting `image.distroless=true`. When enabled, ensur
 
 If you are using as `blobBackend` the filesystem, start first without distroless to allow proper creation of the filesystem and enable in a second step distroless.
 
-> [!NOTE] Filesystem Backends:
+> [!WARNING]
+> **Filesystem Backends**:
 > If you are using the **filesystem** as your `blobBackend`, please perform the initial deployment with Distroless disabled (the default). Once the necessary storage directories are initialized, you can enable Distroless in a subsequent update.
 
-> [!HINT] Database or S3 backends:
+> [!NOTE] 
+> **Database or S3 backends**:
 > Consider setting `readOnlyRootFilesystem` to `true` in your security context and to drop all capabilities.
 
 ### Backup
