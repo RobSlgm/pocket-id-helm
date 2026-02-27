@@ -1,4 +1,4 @@
-{{- $hasPersistence := and .Values.persistence.enabled .Values.persistence.existingClaim -}}
+{{- $hasPersistence := or .Values.persistence.enabled .Values.persistence.existingClaim -}}
 {{- if eq .Values.blobBackend "filesystem" -}}
   {{- if not $hasPersistence -}}
       {{- fail "blobBackend: 'filesystem' requires enabled persistence" -}}
