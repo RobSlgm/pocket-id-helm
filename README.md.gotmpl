@@ -22,6 +22,13 @@ To install the chart with the release name my-release:
 helm install my-release oci://ghcr.io/robslgm/charts/pocket-id
 ```
 
+or upgrade to a specific version 
+
+```
+helm upgrade my-release oci://ghcr.io/robslgm/charts/pocket-id --set image.tag={{ .AppVersion }}
+```
+
+
 ### Uninstalling the Chart
 To uninstall/delete the my-release deployment:
 
