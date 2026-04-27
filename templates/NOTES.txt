@@ -31,4 +31,5 @@ To check the status of your route and its parent Gateways, run:
 {{- if .Values.config.uiConfigDisabled }}
 
 Pocket ID configuration UI is disabled. Configuration needs to be done with this helm charts.
+
 {{- end }}
