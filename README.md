@@ -136,7 +136,6 @@ Originally based on https://github.com/hobbit44/pocket-id-helm/commits/main/ wit
 | httpRoute | object | {} | Expose the service via gateway-api HTTPRoute Requires Gateway API resources and suitable controller installed within the cluster (see: https://gateway-api.sigs.k8s.io/guides/) |
 | httpRoute.annotations | object | `{}` | HTTPRoute annotations. |
 | httpRoute.enabled | bool | `false` | Enables a Gateway API HTTPRoute (use either ingress or httpRoute) |
-| httpRoute.hostnames | list | `["chart-example.local"]` | Hostnames matching HTTP header. |
 | httpRoute.parentRefs | list | {}   | Which Gateways this Route is attached to. |
 | httpRoute.rules | list | {}   | List of rules and filters applied. |
 | image.distroless | bool | `false` | Overrides the image tag whose default is the chart version. |
