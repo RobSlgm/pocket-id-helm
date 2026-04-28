@@ -1,9 +1,9 @@
-name: Release
+name: Release helm chart
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - "v*.*.*" # Triggers on semver tags like v1.0.0
 
 permissions:
   packages: write
@@ -17,10 +17,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v6
 
       - name: "Login to GitHub Container Registry"
@@ -30,16 +30,41 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get Version
-        id: version
+      - name: Extract meta information
+        id: meta
+        run: |
+          # Use parameter expansion to strip 'v' prefix from the tag name
+          CLEAN_VERSION=${GITHUB_REF_NAME#v}
+          echo "clean_version=${CLEAN_VERSION}" >> $GITHUB_OUTPUT
+          if [[ $CLEAN_VERSION == *"-"* ]]; then
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+          fi
+          REPOSITORY_OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "repository_owner_lc=$REPOSITORY_OWNER_LC" >> $GITHUB_OUTPUT          
+
+      - name: Get chart name
+        id: chartname
         uses: mikefarah/yq@master
         with:
-          cmd: yq -r .version Chart.yaml
+          cmd: yq -r .name Chart.yaml
 
       - name: Push Helm chart
         env:
-          VERSION: ${{ steps.version.outputs.result }}
+          VERSION: ${{ steps.meta.outputs.clean_version }}
+          CHART_NAME: ${{ steps.chartname.outputs.result }}
+          REPOSITORY_OWNER_LC: ${{ steps.meta.outputs.repository_owner_lc }}
         run: |
-          REPOSITORY_OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           helm package . --version $VERSION --dependency-update
-          helm push pocket-id-${VERSION}.tgz oci://${{ env.REGISTRY }}/${REPOSITORY_OWNER_LC}/${{ env.CHART_REPO }}
+          helm push ${CHART_NAME}-${VERSION}.tgz oci://${{ env.REGISTRY }}/${REPOSITORY_OWNER_LC}/${{ env.CHART_REPO }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v3
+        # if: github.ref_type == 'tag'
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "${{ github.ref_name }}"
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ steps.meta.outputs.is_prerelease == 'true' }}
