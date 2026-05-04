@@ -3,11 +3,12 @@ name: Release helm chart
 on:
   push:
     tags:
-      - "v*.*.*" # Triggers on semver tags like v1.0.0
+      - "v[0-9]*.[0-9]*.[0-9]*"     # Pattern for standard: v1.2.3
+      - "v[0-9]*.[0-9]*.[0-9]*-*"   # Pattern for pre-release: v1.2.3-alpha.1
 
 permissions:
   packages: write
-  contents: read
+  contents: write
 
 env:
   REGISTRY: ghcr.io
@@ -16,9 +17,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -52,12 +50,12 @@ jobs:
 
       - name: Push Helm chart
         env:
-          VERSION: ${{ steps.meta.outputs.clean_version }}
+          SEMVERSION: ${{ steps.meta.outputs.clean_version }}
           CHART_NAME: ${{ steps.chartname.outputs.result }}
           REPOSITORY_OWNER_LC: ${{ steps.meta.outputs.repository_owner_lc }}
         run: |
-          helm package . --version $VERSION --dependency-update
-          helm push ${CHART_NAME}-${VERSION}.tgz oci://${{ env.REGISTRY }}/${REPOSITORY_OWNER_LC}/${{ env.CHART_REPO }}
+          helm package . --version $SEMVERSION --dependency-update
+          helm push ${CHART_NAME}-${SEMVERSION}.tgz oci://${{ env.REGISTRY }}/${REPOSITORY_OWNER_LC}/${{ env.CHART_REPO }}
 
       - name: Create Release
         uses: softprops/action-gh-release@v3
