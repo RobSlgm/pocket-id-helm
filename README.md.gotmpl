@@ -11,7 +11,7 @@ A postgresql database is required but **not** installed by this helm chart. Inst
 Certain artifacts, such as user profile pictures and OIDC client logos, require blob storage. If you choose filesystem storage (as opposed to database or S3), persistent disk storage must be provisioned. If you opt for S3 storage, the relevant environment variables (e.g., S3_* settings) must be configured.
 
 > [!WARNING]
-> Changes to the `blobBackend` (`FILE_BACKEND` environment setting) require a data migration.
+> Changes to the `blobBackend` (environment setting `FILE_BACKEND`) require a data migration.
 
 If you enable the **GeoLite2 Database**, filesystem storage is mandatory, regardless of the blob storage backend you have selected for other assets.
 
@@ -106,7 +106,7 @@ While a backup solution is not natively bundled with this Helm chart, we strongl
 > [!NOTE]
 > Opting to store blobs directly within the database simplifies your backup routine, as a single database dump will include both your application data and your stored artifacts.
 
-Pocket ID 2.2 has an **experimental** import and export function (works also with distroless).
+Pocket ID 2.2+ has an **experimental** import and export function (works with distroless).
 Example to store the export on your local machine:
 
 ~~~shell
