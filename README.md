@@ -2,7 +2,7 @@
 
 
 
-![Version: 2.12.0](https://img.shields.io/badge/Version-2.12.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.12.0](https://img.shields.io/badge/AppVersion-v2.12.0-informational?style=flat-square) 
+![Version: 2.13.0](https://img.shields.io/badge/Version-2.13.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.13.0](https://img.shields.io/badge/AppVersion-v2.13.0-informational?style=flat-square) 
 
 ### Requirements
 
@@ -25,7 +25,7 @@ helm install my-release oci://ghcr.io/robslgm/charts/pocket-id
 or upgrade to a specific version 
 
 ```
-helm upgrade my-release oci://ghcr.io/robslgm/charts/pocket-id --set image.tag=v2.12.0
+helm upgrade my-release oci://ghcr.io/robslgm/charts/pocket-id --set image.tag=v2.13.0
 ```
 
 

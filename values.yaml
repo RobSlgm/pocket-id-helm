@@ -48,11 +48,18 @@ config: {}
   # emailOneTimeAccessAsAdminEnabled:
   # emailApiKeyExpirationEnabled:
   # emailOneTimeAccessAsUnauthenticatedEnabled:
+  # emailVerificationEnabled:
+  # requireUserEmail:
   # accentColor: "oklch(0.6 0.27 357.52)"
   # logJson:
   # logLevel: 
   # disableRateLimiting:
   # homePageUrl: /settings/apps
+  # webauthnUserVerification:
+  # webauthnAllowSyncedPasskeys:
+  # webauthnAuthenticatorAttachment:
+  # cimdUrlAllowlist:
+  # disableAnimations:
 
 # Name of an existing config map containing any environment variables. 
 # All automatically added settings need to be added.
