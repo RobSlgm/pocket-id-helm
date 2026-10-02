@@ -28,11 +28,12 @@ config: {}
   # maxmindLicenseKey: ""
   # dbConnectionString: ""
   # uploadPath: ""
-  # geoliteDbPath: ""
-  # logLevel: info  
   # # maxmindLicenseKey: (use secret)
+  # geoliteDbPath: ""
+  # geoliteDbUrl: ""
+  # cloudflareLocationHeaders:
+  # logLevel: info  
   # # encryptionKey: (use secret)
-  # geoliteDbPath: 
   # uiConfigDisabled: 
   # appName: 
   # emailsVerified: 
