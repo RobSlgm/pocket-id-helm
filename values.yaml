@@ -35,8 +35,9 @@ config: {}
   # logLevel: info  
   # # encryptionKey: (use secret)
   # uiConfigDisabled: 
-  # appName: 
-  # emailsVerified: 
+  # sessionDuration: 60
+  # appName: "Pocket ID"
+  # emailsVerified: false
   # smtpHost: mail.example.com
   # smtpPort: "465"
   # smtpFrom: pocketid@example.com
@@ -44,23 +45,28 @@ config: {}
   # # smtpPassword:  (use secret)
   # smtpTls:
   # smtpSkpCertVerify:
-  # allowUserSignups: 
-  # emailLoginNotificationEnabled:
-  # emailOneTimeAccessAsAdminEnabled:
-  # emailApiKeyExpirationEnabled:
-  # emailOneTimeAccessAsUnauthenticatedEnabled:
-  # emailVerificationEnabled:
-  # requireUserEmail:
+  # allowOwnAccountEdit: true
+  # allowUserSignups: "disabled"
+  # signupDefaultUserGroupIDs: []
+  # signupDefaultCustomClaims: []
+  # emailVerification: "disabled"
+  # emailLoginNotificationMode: "disabled"
+  # emailLoginNotificationEnabled: false
+  # emailOneTimeAccessAsAdminEnabled: false
+  # emailOneTimeAccessAsUnauthenticatedEnabled: false
+  # emailApiKeyExpirationEnabled: false
+  # requireUserEmail: true
   # accentColor: "oklch(0.6 0.27 357.52)"
   # logJson:
   # logLevel: 
   # disableRateLimiting:
   # homePageUrl: /settings/apps
-  # webauthnUserVerification:
-  # webauthnAllowSyncedPasskeys:
-  # webauthnAuthenticatorAttachment:
-  # cimdUrlAllowlist:
-  # disableAnimations:
+  # webauthnUserVerification: "required"
+  # webauthnAllowSyncedPasskeys: true
+  # webauthnAuthenticatorAttachment: "any"
+  # cimdUrlAllowlist: []
+  # autoCreateOIDCClientSecret: true
+  # disableAnimations: false
 
 # Name of an existing config map containing any environment variables. 
 # All automatically added settings need to be added.
