@@ -44,11 +44,14 @@ config: {}
   # # smtpPassword:  (use secret)
   # smtpTls:
   # smtpSkpCertVerify:
+  # allowOwnAccountEdit:  
   # allowUserSignups: 
+  # emailVerification: "disabled"
+  # emailLoginNotificationMode:
   # emailLoginNotificationEnabled:
   # emailOneTimeAccessAsAdminEnabled:
-  # emailApiKeyExpirationEnabled:
   # emailOneTimeAccessAsUnauthenticatedEnabled:
+  # emailApiKeyExpirationEnabled:
   # emailVerificationEnabled:
   # requireUserEmail:
   # accentColor: "oklch(0.6 0.27 357.52)"
@@ -60,6 +63,7 @@ config: {}
   # webauthnAllowSyncedPasskeys:
   # webauthnAuthenticatorAttachment:
   # cimdUrlAllowlist:
+  # autoCreateOIDCClientSecret:
   # disableAnimations:
 
 # Name of an existing config map containing any environment variables. 
